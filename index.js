@@ -13,7 +13,7 @@ module.exports = function(content) {
 
 	const query = loaderUtils.getOptions(this) || {};
 	const configKey = query.config || "fileLoader";
-	const options = this.options[configKey] || {};
+	const options = {};
 	const config = Object.assign({
 		regExp: undefined,
 		context: undefined,
@@ -24,7 +24,7 @@ module.exports = function(content) {
 		name: "[hash].[ext]",
 	}, options, query);
 
-	const context = config.context || this.options.context || process.cwd();
+	const context = config.context || process.cwd();
 	const issuer = (this._module && this._module.issuer) || {};
 	let url = loaderUtils.interpolateName(this, config.name, {
 		regExp: config.regExp,
@@ -49,7 +49,7 @@ module.exports = function(content) {
 		// Output path
 		// If the `output.dirname` is pointing to up in relation to the `config.outputPath`.
 		// We forced him to the webpack output path config. Even though it is empty.
-		const output = this.options.output || {};
+		const output = {};
 		output.dirname = relation.path.replace(/^(\.\.(\/|\\))+/g, "").split(path.sep).join("/");
 		if (output.dirname.indexOf(config.outputPath) !== 0) output.dirname = config.outputPath;
 		config.outputPath = path.join(output.dirname, url).split(path.sep).join("/");
@@ -62,7 +62,7 @@ module.exports = function(content) {
 		if (output.filename && path.extname(output.filename)) {
 			relation.path = output.dirname;
 		} else if (output.path && is('String', config.cssOutputPath)) {
-			output.bundle = output.path.replace(this.options.context + path.sep, "");
+			output.bundle = output.path.replace(path.sep, "");
 			output.issuer = path.join(context, output.bundle, config.cssOutputPath);
 			output.asset = path.join(context, output.bundle, output.dirname);
 			relation.path = path.relative(output.issuer, output.asset);
